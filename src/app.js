@@ -1,7 +1,7 @@
 // IMPORTACIONES
 // importar servidor express (framework de node.js)
 import express from "express";
-// BORRAR: importar instancia sequelize para healthcheck y comprobacion de DB
+// BORRAR antes de prod: importar instancia sequelize para healthcheck y comprobacion de DB
 import sequelize from "../config/db_pg.js";
 // importar morgan para console.log de las peticiones al servidor para facilitar el desarrollo y debugging
 import morgan from "morgan";
@@ -9,6 +9,10 @@ import morgan from "morgan";
 import helmet from "helmet";
 // importar cookie parser para manejar cookies
 import cookieParser from "cookie-parser";
+
+// import bodyParser from "body-parser"; ?????????????
+
+
 // importar CORS para seguridad: permite controlar qué recursos web pueden ser solicitados por un origen diferente.
 import cors from "cors";
 // importar limiter para limitar las peticiones al servidor
@@ -21,7 +25,6 @@ const limiter = rateLimit({
   message: "Demasiadas solicitudes. Por favor intente nuevamente más tarde.",
 });
 
-// import bodyParser from "body-parser";
 
 //Swagger
 import swaggerUI from "swagger-ui-express";
@@ -86,8 +89,6 @@ app.use((req, res) => {
     // si la ruta que da error es de /api (parte BE) devuelve 404 en formato json
     return res.status(404).json({ message: "Ruta no encontrada" });
   }
-
-  //   return res.status(404).render("404"); // si la ruta que da error es de una vista devuelve 404 en formato html
 });
 
 // 500
@@ -97,8 +98,6 @@ app.use((err, req, res, next) => {
   if (req.originalUrl.startsWith("/api")) {
     return res.status(500).json({ message: "Error interno del servidor" });
   }
-
-  //   return res.status(500).render("500"); // si la ruta que da error es de una vista devuelve 404 en formato html
 });
 
 // --------------------------------------
