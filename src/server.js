@@ -1,9 +1,9 @@
-import "../config/env.js";
+import { env } from "./config/env.js";
 import app from "./app.js";
 // Definimos puerto
-const PORT = process.env.PORT || 3000;
+const PORT = env.port || 3000;
 // importar config de bbdd
-import sequelize from "../config/db_pg.js";
+import sequelize from "./config/db_pg.js";
 // Start server and bbdd
 const startServer = async () => {
   try {

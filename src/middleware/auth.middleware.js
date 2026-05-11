@@ -1,7 +1,9 @@
 
 // importar jsonwebtoken para generar tokens de autenticacion
 import jwt from "jsonwebtoken"
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+import { env } from "../config/env.js";
+
+const accessTokenSecret = env.ACCESS_TOKEN_SECRET;
 
 const authenticateJWT = (req, res, next) => {
   const token = req.cookies.accessToken;
