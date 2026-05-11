@@ -1,6 +1,13 @@
 # Dependencies
 node_modules/
 
+# Build
+dist/
+
+# Temp
+tmp/
+uploads/
+
 # Logs
 logs
 *.log
