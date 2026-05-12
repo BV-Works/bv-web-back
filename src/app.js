@@ -1,32 +1,35 @@
 // IMPORTACIONES
 // importar servidor express (framework de node.js)
-import express from "express";
+import express from 'express';
 // importar config de variables de entorno
-import { env } from "./config/env.js";
+import { env } from './config/env.js';
 // BORRAR antes de prod: importar instancia sequelize para healthcheck y comprobacion de DB
-import sequelize from "./config/db_pg.js";
+import sequelize from './config/db_pg.js';
 // importar morgan para console.log de las peticiones al servidor para facilitar el desarrollo y debugging
-import morgan from "morgan";
+import morgan from 'morgan';
 // importar helmet para proteger cabeceras security (headers middleware)
-import helmet from "helmet";
+import helmet from 'helmet';
 // importar cookie parser para manejar cookies
-import cookieParser from "cookie-parser";
+import cookieParser from 'cookie-parser';
 
 // importar CORS para seguridad: permite controlar qué recursos web pueden ser solicitados por un origen diferente.
-import cors from "cors";
+import cors from 'cors';
 // importar limiter para limitar las peticiones al servidor
-import rateLimit from "express-rate-limit";
+import rateLimit from 'express-rate-limit';
+// importar manejo de errores personalizado
+import { errorHandler, notFound } from './middlewares/error.middleware.js';
 
+import { successResponse, errorResponse } from './utils/apiResponse.js';
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // Límite de 100 solicitudes por IP dentro del tiempo de ventana
-  message: "Demasiadas solicitudes. Por favor intente nuevamente más tarde.",
+  message: 'Demasiadas solicitudes. Por favor intente nuevamente más tarde.',
 });
 
 //Swagger
-import swaggerUI from "swagger-ui-express";
-import YAML from "yamljs";
+import swaggerUI from 'swagger-ui-express';
+import YAML from 'yamljs';
 // const fs = require("fs");
 
 const app = express();
@@ -35,13 +38,13 @@ const app = express();
 // DECLARACIONES DE USO EN NUESTRA APP:
 
 app.use(express.json()); // para usar objetos en formaro json en las request
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 
 // Configuración de CORS para permitir solicitudes desde el frontend
 app.use(
   cors({
-    origin: env.corsOrigins || "http://localhost:3000", // Ajusta esto a tu frontend URL origin: ,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: env.corsOrigins, // Ajusta esto a tu frontend URL origin: ,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true, // Si necesitas enviar cookies o tokens de autenticación
   }),
 );
@@ -55,51 +58,49 @@ app.use(cookieParser()); // Parsear las cookies que vienen en las cabezeras http
 // --------------------------------------
 // RUTAS DE NUESTRA APP:
 
-// esto lo comentamos xq solo lo teniamos al principio para probar que funcionaba, ahora queremos que la primera ruta en la que se entra en la app sea home
-app.get("/", (_req, res) => {
-  res.json({ message: "funciona" });
-});
-
-app.get("/health", async (_req, res) => {
+app.get('/health', async (_req, res) => {
   try {
     await sequelize.authenticate();
 
-    return res.status(200).json({
-      status: "ok",
-      database: "connected",
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString(),
-    });
+    return res.status(200).json(
+      successResponse({
+        database: 'connected',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+      }),
+    );
   } catch (error) {
-    return res.status(500).json({
-      status: "error",
-      database: "disconnected",
-    });
+    return res
+      .status(500)
+      .json(errorResponse('Database disconnected', 'DB_ERROR'));
   }
 });
 
 // --------------------------------------
 // Manejo de errores
 // 404
-app.use((req, res) => {
-  return res.status(404).json({ message: "Ruta no encontrada" });
-});
-
+app.use(notFound);
 // 500
-app.use((err, req, res, next) => {
-  return res.status(500).json({ message: "Error interno del servidor" });
-});
+app.use(errorHandler);
 
 // --------------------------------------
 // Seguridad runtime
-process.on("unhandledRejection", (err) => {
+process.on('unhandledRejection', (err) => {
   //captura errores no controlados en promesas (awaits sin try/catch)
-  console.error("Unhandled Rejection:", err);
+  console.error('Unhandled Rejection:', err);
+  // En producción, es recomendable reiniciar el proceso después de una excepción no controlada para evitar estados inconsistentes.
+  if (env.nodeEnv === 'production') {
+    process.exit(1);
+  }
 });
 
-process.on("uncaughtException", (err) => {
+process.on('uncaughtException', (err) => {
   // captura errores sin try/catch en código síncrono.
-  console.error("Uncaught Exception:", err);
+  console.error('Uncaught Exception:', err);
+  // En producción, es recomendable reiniciar el proceso después de una excepción no controlada para evitar estados inconsistentes.
+  if (env.nodeEnv === 'production') {
+    process.exit(1);
+  }
 });
 
 export default app;
