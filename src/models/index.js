@@ -1,6 +1,6 @@
-import User from "./User.js";
-import Profile from "./Profile.js";
-import Link from "./Link.js";
+import User from './User.js';
+import Profile from './Profile.js';
+import Link from './Link.js';
 
 /*
 |--------------------------------------------------------------------------
@@ -9,13 +9,13 @@ import Link from "./Link.js";
 */
 
 User.hasOne(Profile, {
-  foreignKey: "user_id",
-  as: "profile",
+  foreignKey: 'user_id',
+  as: 'profile',
 });
 
 Profile.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
+  foreignKey: 'user_id',
+  as: 'user',
 });
 
 /*
@@ -25,17 +25,13 @@ Profile.belongsTo(User, {
 */
 
 Profile.hasMany(Link, {
-  foreignKey: "profile_id",
-  as: "links",
+  foreignKey: 'profile_id',
+  as: 'links',
 });
 
 Link.belongsTo(Profile, {
-  foreignKey: "profile_id",
-  as: "profile",
+  foreignKey: 'profile_id',
+  as: 'profile',
 });
 
-export {
-  User,
-  Profile,
-  Link,
-};
+export { User, Profile, Link };

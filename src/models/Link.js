@@ -1,8 +1,8 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db_pg.js";
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/db_pg.js';
 
 const Link = sequelize.define(
-  "Link",
+  'Link',
   {
     id: {
       type: DataTypes.UUID,
@@ -19,15 +19,18 @@ const Link = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [[ //validación de aplicación flexible
-          "spotify",
-          "instagram",
-          "youtube",
-          "tiktok",
-          "applemusic",
-          "twitch",
-          "custom",
-        ]],
+        isIn: [
+          [
+            //validación de aplicación flexible
+            'spotify',
+            'instagram',
+            'youtube',
+            'tiktok',
+            'applemusic',
+            'twitch',
+            'custom',
+          ],
+        ],
       },
     },
 
@@ -57,13 +60,13 @@ const Link = sequelize.define(
     },
   },
   {
-    tableName: "links",
+    tableName: 'links',
 
     timestamps: true,
 
-    createdAt: "created_at",
-    updatedAt: "updated_at",
-  }
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
 );
 
 export default Link;

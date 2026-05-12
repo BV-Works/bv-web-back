@@ -1,15 +1,15 @@
 // importar libreria dotenv para manejar archivos .env
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 // cargar variables de entorno antes de iniciar app y db
 dotenv.config();
 
 const requiredEnv = [
-  "DB_HOST",
-  "DB_USER",
-  "DB_PORT",
-  "DB_DATABASE",
-  "DB_PASSWORD",
-  "ACCESS_TOKEN_SECRET",
+  'DB_HOST',
+  'DB_USER',
+  'DB_PORT',
+  'DB_DATABASE',
+  'DB_PASSWORD',
+  'ACCESS_TOKEN_SECRET',
 ];
 
 requiredEnv.forEach((key) => {
@@ -21,32 +21,25 @@ requiredEnv.forEach((key) => {
 export const env = {
   port: process.env.PORT || 3000,
 
-  nodeEnv:
-    process.env.NODE_ENV || "development",
+  nodeEnv: process.env.NODE_ENV || 'development',
 
-  frontendUrl:
-    process.env.CLIENT_URL ||
-    "http://localhost:5173",
+  frontendUrl: process.env.CLIENT_URL || 'http://localhost:5173',
 
   corsOrigins: [
-    "http://localhost:5173",
-    "https://bajovigilancia.com",
-    "https://www.bajovigilancia.com",
-    "http://localhost:3000"
+    'http://localhost:5173',
+    'https://bajovigilancia.com',
+    'https://www.bajovigilancia.com',
+    'http://localhost:3000',
   ],
 
-  jwtSecret:
-    process.env.ACCESS_TOKEN_SECRET,
+  jwtSecret: process.env.ACCESS_TOKEN_SECRET,
 
   cloudinary: {
-    cloudName:
-      process.env.CLOUDINARY_CLOUD_NAME || "",
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
 
-    apiKey:
-      process.env.CLOUDINARY_API_KEY || "",
+    apiKey: process.env.CLOUDINARY_API_KEY || '',
 
-    apiSecret:
-      process.env.CLOUDINARY_API_SECRET || "",
+    apiSecret: process.env.CLOUDINARY_API_SECRET || '',
   },
 
   db: {
@@ -55,6 +48,6 @@ export const env = {
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    ssl: process.env.DB_SSL === "true",
+    ssl: process.env.DB_SSL === 'true',
   },
 };

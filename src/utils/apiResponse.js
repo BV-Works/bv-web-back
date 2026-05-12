@@ -1,23 +1,23 @@
-export const successResponse = (data, message = "") => {
+export const successResponse = (data, message = '') => {
   return {
-    status: "success",
+    status: 'success',
     data,
     message,
-  }
-}
+  };
+};
 
-export const errorResponse = (message, code = "INTERNAL_ERROR") => {
+export const errorResponse = (message, code = 'INTERNAL_ERROR') => {
   return {
-    status: "error",
+    status: 'error',
     message,
     code,
-  }
-}
+  };
+};
 
 export const paginatedResponse = (data, meta) => {
   return {
-    status: "success",
+    status: 'success',
     data,
     meta,
-  }
-}
+  };
+};

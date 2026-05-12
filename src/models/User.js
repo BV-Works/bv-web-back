@@ -1,8 +1,8 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db_pg.js";
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/db_pg.js';
 
 const User = sequelize.define(
-  "User",
+  'User',
   {
     id: {
       type: DataTypes.UUID,
@@ -27,9 +27,9 @@ const User = sequelize.define(
     role: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "TEAM",
+      defaultValue: 'TEAM',
       validate: {
-        isIn: [["ADMIN", "TEAM", "CUSTOMER", "ARTIST"]],
+        isIn: [['ADMIN', 'TEAM', 'CUSTOMER', 'ARTIST']],
       },
     },
 
@@ -40,13 +40,13 @@ const User = sequelize.define(
     },
   },
   {
-    tableName: "users",
+    tableName: 'users',
 
     timestamps: true,
 
-    createdAt: "created_at",
-    updatedAt: "updated_at",
-  }
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
 );
 
 export default User;
