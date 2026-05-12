@@ -1,0 +1,23 @@
+import sequelize from '../config/db_pg.js';
+import { successResponse, errorResponse } from '../utils/apiResponse.js';
+
+export const checkHealth = async (_req, res) => {
+  try {
+    await sequelize.authenticate();
+
+    return res.status(200).json(
+      successResponse(
+        {
+          database: 'connected',
+          uptime: process.uptime(),
+          timestamp: new Date().toISOString(),
+        },
+        'System healthy',
+      ),
+    );
+  } catch (error) {
+    return res
+      .status(500)
+      .json(errorResponse('Database disconnected', 'DB_ERROR'));
+  }
+};

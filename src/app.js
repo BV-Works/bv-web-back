@@ -64,27 +64,9 @@ import profilesRoutes from './routes/profiles.routes.js';
 import systemRoutes from './routes/system.routes.js';
 
 app.use('/auth', authRoutes);
-app.use('/users', usersRoutes);
-app.use('/profiles', profilesRoutes);
+// app.use('/users', usersRoutes);
+// app.use('/profiles', profilesRoutes);
 app.use('/system', systemRoutes);
-
-// app.get('/health', async (_req, res) => {
-//   try {
-//     await sequelize.authenticate();
-
-//     return res.status(200).json(
-//       successResponse({
-//         database: 'connected',
-//         uptime: process.uptime(),
-//         timestamp: new Date().toISOString(),
-//       }),
-//     );
-//   } catch (error) {
-//     return res
-//       .status(500)
-//       .json(errorResponse('Database disconnected', 'DB_ERROR'));
-//   }
-// });
 
 // --------------------------------------
 // Manejo de errores
