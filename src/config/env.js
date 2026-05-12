@@ -32,6 +32,7 @@ export const env = {
     "http://localhost:5173",
     "https://bajovigilancia.com",
     "https://www.bajovigilancia.com",
+    "http://localhost:3000"
   ],
 
   jwtSecret:
