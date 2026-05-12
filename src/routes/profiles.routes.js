@@ -18,7 +18,6 @@
 
 // // PROFILES
 
-
 // // GET /profiles
 // // filtros:
 // // ?type=TEAM | ARTIST
@@ -44,9 +43,7 @@
 // // DELETE /profiles/:id
 // router.delete('/:id', deleteProfile);
 
-
 // // LINKS (subrecurso de profile)
-
 
 // // GET links de un profile
 // router.get('/:id/links', getLinksByProfile);

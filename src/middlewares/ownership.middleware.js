@@ -10,9 +10,7 @@ export const checkProfileOwnership = async (req, res, next) => {
     const userId = req.user?.id;
 
     if (!profileId || !userId) {
-      return res
-        .status(400)
-        .json(errorResponse('Missing data', 'BAD_REQUEST'));
+      return res.status(400).json(errorResponse('Missing data', 'BAD_REQUEST'));
     }
 
     const profile = await Profile.findByPk(profileId);
@@ -53,9 +51,7 @@ export const checkLinkOwnership = async (req, res, next) => {
     const userId = req.user?.id;
 
     if (!profileId || !linkId || !userId) {
-      return res
-        .status(400)
-        .json(errorResponse('Missing data', 'BAD_REQUEST'));
+      return res.status(400).json(errorResponse('Missing data', 'BAD_REQUEST'));
     }
 
     const profile = await Profile.findByPk(profileId);

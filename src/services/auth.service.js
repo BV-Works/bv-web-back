@@ -8,7 +8,11 @@ export const loginUser = async ({ email, password }) => {
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    throw { statusCode: 401, message: 'Invalid credentials', code: 'INVALID_LOGIN' };
+    throw {
+      statusCode: 401,
+      message: 'Invalid credentials',
+      code: 'INVALID_LOGIN',
+    };
   }
 
   if (!user.is_active) {
@@ -18,7 +22,11 @@ export const loginUser = async ({ email, password }) => {
   const isMatch = await bcrypt.compare(password, user.password_hash);
 
   if (!isMatch) {
-    throw { statusCode: 401, message: 'Invalid credentials', code: 'INVALID_LOGIN' };
+    throw {
+      statusCode: 401,
+      message: 'Invalid credentials',
+      code: 'INVALID_LOGIN',
+    };
   }
 
   const token = jwt.sign(
