@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { env } from '../config/env.js';
 
 import { successResponse, errorResponse } from '../utils/apiResponse.js';
 import { loginUser } from '../services/auth.service.js';
-import AUTH_COOKIE_NAME from '../constants/auth.constants.js';
+import { AUTH_COOKIE_NAME } from '../constants/auth.constants.js';
 
 // LOGIN
 

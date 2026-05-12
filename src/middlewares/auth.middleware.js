@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
-import AUTH_COOKIE_NAME from '../constants/auth.constants.js';
+import { AUTH_COOKIE_NAME } from '../constants/auth.constants.js';
 import { errorResponse } from '../utils/apiResponse.js';
 
 // AUTH REQUIRED (hard protection)

@@ -59,14 +59,20 @@ app.use(cookieParser()); // Parsear las cookies que vienen en las cabezeras http
 // RUTAS:
 
 import authRoutes from './routes/auth.routes.js';
-import usersRoutes from './routes/users.routes.js';
-import profilesRoutes from './routes/profiles.routes.js';
+// import usersRoutes from './routes/users.routes.js';
+// import profilesRoutes from './routes/profiles.routes.js';
 import systemRoutes from './routes/system.routes.js';
 
 app.use('/auth', authRoutes);
 // app.use('/users', usersRoutes);
 // app.use('/profiles', profilesRoutes);
 app.use('/system', systemRoutes);
+// --------------------------------------
+// RUTAS DE PRUEBA:
+
+app.get('/', (_req, res) => {
+  res.redirect('/system/health');
+});
 
 // --------------------------------------
 // Manejo de errores
