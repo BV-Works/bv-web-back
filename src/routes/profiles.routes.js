@@ -52,7 +52,7 @@ const router = Router();
 // ?limit=10&page=1
 router.get('/', getProfilesValidator, validateRequest, getProfiles);
 
-// GET público (landing pages)
+// GET PROFILE PÚBLICO (landing pages)
 router.get(
   '/public/:slug',
   profileSlugValidator,
