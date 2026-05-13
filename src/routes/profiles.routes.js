@@ -23,7 +23,6 @@ import {
   checkLinkOwnership,
 } from '../middlewares/ownership.middleware.js';
 
-
 import { validateRequest } from '../middlewares/validation.middleware.js';
 
 import {

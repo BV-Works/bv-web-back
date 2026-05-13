@@ -1,9 +1,7 @@
 import Profile from '../models/Profile.js';
 
 export const generateSlug = (text) => {
-  const normalized = text.includes('@')
-    ? text.split('@')[0]
-    : text;
+  const normalized = text.includes('@') ? text.split('@')[0] : text;
 
   return normalized
     .toLowerCase()

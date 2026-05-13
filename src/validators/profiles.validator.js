@@ -100,9 +100,7 @@ export const createProfileValidator = [
 export const updateProfileValidator = [
   body('display_name').optional().isLength({ min: 2, max: 120 }),
 
-  body('slug')
-    .optional()
-    .isSlug(),
+  body('slug').optional().isSlug(),
 
   body('bio').optional().isString(),
 
