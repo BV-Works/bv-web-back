@@ -1,60 +1,155 @@
-// import { Router } from 'express';
+import { Router } from 'express';
 
-// import {
-//   getProfiles,
-//   getProfileById,
-//   getProfileBySlug,
-//   getMyProfile,
-//   createProfile,
-//   updateProfile,
-//   deleteProfile,
-//   getLinksByProfile,
-//   createLink,
-//   updateLink,
-//   deleteLink,
-// } from '../controllers/profiles.controller.js';
+import {
+  getProfiles,
+  getProfileById,
+  getProfileBySlug,
+  getMyProfile,
+  createProfile,
+  updateProfile,
+  deleteProfile,
+  getLinksByProfile,
+  createLink,
+  updateLink,
+  deleteLink,
+} from '../controllers/profiles.controller.js';
 
-// const router = Router();
+import { authenticateJWT } from '../middlewares/auth.middleware.js';
 
-// // PROFILES
+import { authorizeRoles } from '../middlewares/role.middleware.js';
 
-// // GET /profiles
-// // filtros:
-// // ?type=TEAM | ARTIST
-// // ?is_public=true
-// // ?limit=10&page=1
-// router.get('/', getProfiles);
+import {
+  checkProfileOwnership,
+  checkLinkOwnership,
+} from '../middlewares/ownership.middleware.js';
 
-// // GET público (landing pages)
-// router.get('/public/:slug', getProfileBySlug);
 
-// // GET perfil del usuario autenticado
-// router.get('/me', getMyProfile);
+import { validateRequest } from '../middlewares/validation.middleware.js';
 
-// // GET admin / edición por ID
-// router.get('/:id', getProfileById);
+import {
+  profileIdValidator,
+  profileSlugValidator,
+  getProfilesValidator,
+  createProfileValidator,
+  updateProfileValidator,
+  linkIdValidator,
+  createLinkValidator,
+  updateLinkValidator,
+} from '../validators/profiles.validator.js';
 
-// // POST /profiles
-// router.post('/', createProfile);
+import { ROLES } from '../constants/roles.js';
 
-// // PUT /profiles/:id
-// router.put('/:id', updateProfile);
+const router = Router();
 
-// // DELETE /profiles/:id
-// router.delete('/:id', deleteProfile);
+// PROFILES
 
-// // LINKS (subrecurso de profile)
+// RUTAS PUBLICAS (sin autenticación)
 
-// // GET links de un profile
-// router.get('/:id/links', getLinksByProfile);
+// GET /profiles
+// filtros:
+// ?type=TEAM | ARTIST
+// ?is_public=true
+// ?limit=10&page=1
+router.get('/', getProfilesValidator, validateRequest, getProfiles);
 
-// // POST link
-// router.post('/:id/links', createLink);
+// GET público (landing pages)
+router.get(
+  '/public/:slug',
+  profileSlugValidator,
+  validateRequest,
+  getProfileBySlug,
+);
 
-// // PUT link
-// router.put('/:id/links/:linkId', updateLink);
+// RUTAS PROTEGIDAS (requieren autenticación)
 
-// // DELETE link
-// router.delete('/:id/links/:linkId', deleteLink);
+// GET perfil del usuario autenticado
+router.get('/me', authenticateJWT, getMyProfile);
 
-// export default router;
+// RUTAS ADMIN O PRIVADAS (requieren rol ADMIN o ownership del perfil)
+
+// GET admin / edición por ID (ADMIN ONLY)
+router.get(
+  '/:id',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  profileIdValidator,
+  validateRequest,
+  getProfileById,
+);
+
+// POST /profiles (ADMIN solo para crear perfiles de otros usuarios)
+// (el usuario común solo puede crear su propio perfil al registrarse, lo cual se manejará en el auth.controller.js (DE MOMENTO SOLO ADMIN))
+router.post(
+  '/',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  createProfileValidator,
+  validateRequest,
+  createProfile,
+);
+
+// PUT /profiles/:id (ADMIN o propietario)
+router.put(
+  '/:id',
+  authenticateJWT,
+  profileIdValidator,
+  validateRequest, // Validar ID antes de verificar ownership
+  checkProfileOwnership,
+  updateProfileValidator,
+  validateRequest, // Validar body después de verificar ownership
+  updateProfile,
+);
+
+// DELETE /profiles/:id (ADMIN o propietario)
+router.delete(
+  '/:id',
+  authenticateJWT,
+  profileIdValidator,
+  validateRequest,
+  checkProfileOwnership,
+  deleteProfile,
+);
+
+// LINKS (subrecurso de profile)
+
+// GET links de un profile
+router.get(
+  '/:id/links',
+  authenticateJWT,
+  validateRequest,
+  checkProfileOwnership,
+  getLinksByProfile,
+);
+
+// POST link
+router.post(
+  '/:id/links',
+  authenticateJWT,
+  createLinkValidator,
+  validateRequest,
+  checkProfileOwnership,
+  createLink,
+);
+
+// PUT link
+router.put(
+  '/:id/links/:linkId',
+  authenticateJWT,
+  linkIdValidator,
+  updateLinkValidator,
+  validateRequest,
+  checkLinkOwnership,
+  updateLink,
+);
+
+// DELETE link
+router.delete(
+  '/:id/links/:linkId',
+  authenticateJWT,
+  linkIdValidator,
+  validateRequest,
+  checkLinkOwnership,
+  deleteLink,
+);
+
+export default router;

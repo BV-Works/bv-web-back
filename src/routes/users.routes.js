@@ -1,28 +1,79 @@
-// import { Router } from 'express';
+import { Router } from 'express';
 
-// import {
-//   getUsers,
-//   getUserById,
-//   createUser,
-//   updateUser,
-//   deleteUser,
-// } from '../controllers/users.controller.js';
+import {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} from '../controllers/users.controller.js';
 
-// const router = Router();
+import { authenticateJWT } from '../middlewares/auth.middleware.js';
+import { authorizeRoles } from '../middlewares/role.middleware.js';
 
-// // GET /users
-// router.get('/', getUsers);
+import { validateRequest } from '../middlewares/validation.middleware.js';
 
-// // GET /users/:id
-// router.get('/:id', getUserById);
+import {
+  userIdValidator,
+  getUsersValidator,
+  createUserValidator,
+  updateUserValidator,
+} from '../validators/users.validator.js';
 
-// // POST /users
-// router.post('/', createUser);
+import { ROLES } from '../constants/roles.js';
 
-// // PUT /users/:id
-// router.put('/:id', updateUser);
+const router = Router();
 
-// // DELETE /users/:id
-// router.delete('/:id', deleteUser);
+// GET /users
+router.get(
+  '/',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  getUsersValidator,
+  validateRequest,
+  getUsers,
+);
 
-// export default router;
+// GET /users/:id
+router.get(
+  '/:id',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  userIdValidator,
+  validateRequest,
+  getUserById,
+);
+
+// POST /users CREATE USER
+
+router.post(
+  '/',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  createUserValidator,
+  validateRequest,
+  createUser,
+);
+
+// PUT /users/:id
+router.put(
+  '/:id',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  userIdValidator,
+  updateUserValidator,
+  validateRequest,
+  updateUser,
+);
+
+// DELETE /users/:id
+router.delete(
+  '/:id',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  userIdValidator,
+  validateRequest,
+  deleteUser,
+);
+
+export default router;
