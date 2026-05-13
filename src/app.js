@@ -56,24 +56,22 @@ app.use(helmet()); // Helmet para proteger contra ataques de tipo xss
 app.use(cookieParser()); // Parsear las cookies que vienen en las cabezeras http: "It simplifies managing user sessions, authentication tokens, and preferences by converting raw request cookie headers into easily accessible JSON objects."
 
 // --------------------------------------
-// RUTAS DE NUESTRA APP:
+// RUTAS:
 
-app.get('/health', async (_req, res) => {
-  try {
-    await sequelize.authenticate();
+import authRoutes from './routes/auth.routes.js';
+import usersRoutes from './routes/users.routes.js';
+import profilesRoutes from './routes/profiles.routes.js';
+import systemRoutes from './routes/system.routes.js';
 
-    return res.status(200).json(
-      successResponse({
-        database: 'connected',
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString(),
-      }),
-    );
-  } catch (error) {
-    return res
-      .status(500)
-      .json(errorResponse('Database disconnected', 'DB_ERROR'));
-  }
+app.use('/auth', authRoutes);
+app.use('/users', usersRoutes);
+app.use('/profiles', profilesRoutes);
+app.use('/system', systemRoutes);
+// --------------------------------------
+// RUTAS DE PRUEBA:
+
+app.get('/', (_req, res) => {
+  res.redirect('/system/health');
 });
 
 // --------------------------------------

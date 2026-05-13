@@ -6,13 +6,12 @@ export const successResponse = (data, message = '') => {
   };
 };
 
-export const errorResponse = (message, code = 'INTERNAL_ERROR') => {
-  return {
-    status: 'error',
-    message,
-    code,
-  };
-};
+export const errorResponse = (message, code = 'ERROR', errors = null) => ({
+  status: 'error',
+  message,
+  code,
+  ...(errors && { errors }),
+});
 
 export const paginatedResponse = (data, meta) => {
   return {

@@ -27,7 +27,7 @@ const User = sequelize.define(
     role: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'TEAM',
+      defaultValue: 'CUSTOMER',
       validate: {
         isIn: [['ADMIN', 'TEAM', 'CUSTOMER', 'ARTIST']],
       },

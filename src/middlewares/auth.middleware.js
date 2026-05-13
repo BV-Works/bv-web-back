@@ -1,33 +1,28 @@
-// importar jsonwebtoken para generar tokens de autenticacion
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
+import { AUTH_COOKIE_NAME } from '../constants/auth.constants.js';
+import { errorResponse } from '../utils/apiResponse.js';
 
-const accessTokenSecret = env.ACCESS_TOKEN_SECRET;
+// AUTH REQUIRED (hard protection)
 
-const authenticateJWT = (req, res, next) => {
-  const token = req.cookies.accessToken;
+export const authenticateJWT = (req, res, next) => {
+  const token = req.cookies?.[AUTH_COOKIE_NAME];
 
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json(errorResponse('Unauthorized', 'NO_TOKEN'));
   }
 
   try {
-    req.user = jwt.verify(token, accessTokenSecret);
+    const decoded = jwt.verify(token, env.jwtSecret);
+
+    req.user = req.user = {
+      id: decoded.id,
+      role: decoded.role,
+    };
     return next();
-  } catch (error) {
-    return res.status(401).json({ message: 'Invalid or expired token' });
+  } catch (err) {
+    return res
+      .status(401)
+      .json(errorResponse('Invalid or expired token', 'INVALID_TOKEN'));
   }
 };
-
-const authorizeRoles = (...allowedRoles) => {
-  return (req, res, next) => {
-    if (!allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({
-        message: 'Forbidden',
-      });
-    }
-    return next();
-  };
-};
-
-export { authenticateJWT, authorizeRoles };

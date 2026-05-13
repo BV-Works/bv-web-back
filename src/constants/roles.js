@@ -4,4 +4,11 @@ export const ROLES = {
   ARTIST: 'ARTIST',
   CUSTOMER: 'CUSTOMER',
 };
-export default ROLES;
+
+export const AUTO_PROFILE_ROLES = [ROLES.ADMIN, ROLES.TEAM, ROLES.ARTIST];
+
+export const PROFILE_TYPE_BY_ROLE = {
+  ADMIN: 'TEAM',
+  TEAM: 'TEAM',
+  ARTIST: 'ARTIST',
+};
