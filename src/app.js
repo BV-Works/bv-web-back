@@ -19,8 +19,6 @@ import rateLimit from 'express-rate-limit';
 // importar manejo de errores personalizado
 import { errorHandler, notFound } from './middlewares/error.middleware.js';
 
-import { successResponse, errorResponse } from './utils/apiResponse.js';
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // Límite de 100 solicitudes por IP dentro del tiempo de ventana

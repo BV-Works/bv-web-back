@@ -5,8 +5,9 @@ import {
   ROLES,
   AUTO_PROFILE_ROLES,
   PROFILE_TYPE_BY_ROLE,
-} from '../constants/roles.js';
+} from '../constants/roles.constants.js';
 import { generateUniqueSlug } from '../utils/slug.js';
+import sequelize from '../config/db_pg.js';
 
 // GET USERS - ADMIN ONLY
 
@@ -79,30 +80,47 @@ export const createUserService = async ({
     };
   }
 
-  const password_hash = await bcrypt.hash(password, 10);
+  const transaction = await sequelize.transaction();
 
-  const user = await User.create({
-    email,
-    password_hash,
-    role,
-    is_active,
-  });
+  try {
+    const password_hash = await bcrypt.hash(password, 10);
 
-  // AUTO PROFILE CREATION RULE: Si eres ADMIN, TEAM o ARTIST, te creamos un perfil automáticamente
-  if (AUTO_PROFILE_ROLES.includes(role)) {
-    await Profile.create({
-      user_id: user.id,
-      profile_type: PROFILE_TYPE_BY_ROLE[role],
-      display_name: email.split('@')[0],
-      slug: await generateUniqueSlug(email),
-      is_public: true,
-    });
+    const user = await User.create(
+      {
+        email,
+        password_hash,
+        role,
+        is_active,
+      },
+      { transaction },
+    );
+
+    // AUTO PROFILE CREATION RULE:
+    // Si eres ADMIN, TEAM o ARTIST, te creamos un perfil automáticamente
+
+    if (AUTO_PROFILE_ROLES.includes(role)) {
+      await Profile.create(
+        {
+          user_id: user.id,
+          profile_type: PROFILE_TYPE_BY_ROLE[role],
+          display_name: email.split('@')[0],
+          slug: await generateUniqueSlug(email),
+          is_public: true,
+        },
+        { transaction },
+      );
+    }
+
+    await transaction.commit();
+
+    const safeUser = user.toJSON();
+    delete safeUser.password_hash;
+
+    return safeUser;
+  } catch (err) {
+    await transaction.rollback();
+    throw err;
   }
-
-  const safeUser = user.toJSON();
-  delete safeUser.password_hash;
-
-  return safeUser;
 };
 
 // UPDATE USER (ADMIN ONLY CONTROLLED)

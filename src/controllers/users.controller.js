@@ -5,12 +5,13 @@ import {
   updateUserService,
   deleteUserService,
 } from '../services/users.service.js';
+import { successResponse } from '../utils/apiResponse.js';
 
 // GET /users (ADMIN)
 export const getUsers = async (req, res, next) => {
   try {
     const result = await getUsersService(req.query);
-    res.json(result);
+    res.json(successResponse(result));
   } catch (err) {
     next(err);
   }
@@ -20,7 +21,7 @@ export const getUsers = async (req, res, next) => {
 export const getUserById = async (req, res, next) => {
   try {
     const user = await getUserByIdService(req.params.id);
-    res.json(user);
+    res.json(successResponse(user));
   } catch (err) {
     next(err);
   }
@@ -30,7 +31,7 @@ export const getUserById = async (req, res, next) => {
 export const createUser = async (req, res, next) => {
   try {
     const user = await createUserService(req.body);
-    res.status(201).json(user);
+    res.status(201).json(successResponse(user));
   } catch (err) {
     next(err);
   }
@@ -40,7 +41,7 @@ export const createUser = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
   try {
     const user = await updateUserService(req.params.id, req.body);
-    res.json(user);
+    res.json(successResponse(user));
   } catch (err) {
     next(err);
   }

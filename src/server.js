@@ -11,7 +11,9 @@ const startServer = async () => {
 
     console.log('Database connected');
 
-    await sequelize.sync({ force: false });
+    if (env.nodeEnv !== 'production') {
+      await sequelize.sync({ force: false });
+    }
     console.log('Models synced');
 
     app.listen(PORT, () => {

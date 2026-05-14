@@ -1,6 +1,6 @@
 import Profile from '../models/Profile.js';
 import Link from '../models/Link.js';
-
+import { paginatedResponse } from '../utils/apiResponse.js';
 // GET PROFILES (LIST + FILTERS) - PUBLIC
 
 export const getProfilesService = async (filters) => {
@@ -12,8 +12,8 @@ export const getProfilesService = async (filters) => {
     where.profile_type = type;
   }
 
-  if (typeof is_public === 'boolean') {
-    where.is_public = is_public;
+  if (is_public !== undefined) {
+    where.is_public = is_public === true || is_public === 'true';
   }
 
   const offset = (page - 1) * limit;
@@ -25,15 +25,14 @@ export const getProfilesService = async (filters) => {
     order: [['created_at', 'DESC']],
   });
 
-  return {
-    data: rows,
+  return paginatedResponse(rows, {
     pagination: {
       total: count,
       page,
       limit,
       pages: Math.ceil(count / limit),
     },
-  };
+  });
 };
 
 // GET PROFILE BY ID - ADMIN ONLY

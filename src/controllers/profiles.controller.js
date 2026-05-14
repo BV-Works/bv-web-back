@@ -11,12 +11,13 @@ import {
   updateLinkService,
   deleteLinkService,
 } from '../services/profiles.service.js';
+import { successResponse } from '../utils/apiResponse.js';
 
 // GET /profiles (PUBLIC)
 export const getProfiles = async (req, res, next) => {
   try {
     const data = await getProfilesService(req.query);
-    res.json(data);
+    res.json(successResponse(data));
   } catch (err) {
     next(err);
   }
@@ -26,7 +27,7 @@ export const getProfiles = async (req, res, next) => {
 export const getProfileById = async (req, res, next) => {
   try {
     const profile = await getProfileByIdService(req.params.id);
-    res.json(profile);
+    res.json(successResponse(profile));
   } catch (err) {
     next(err);
   }
@@ -36,7 +37,7 @@ export const getProfileById = async (req, res, next) => {
 export const getProfileBySlug = async (req, res, next) => {
   try {
     const profile = await getProfileBySlugService(req.params.slug);
-    res.json(profile);
+    res.json(successResponse(profile));
   } catch (err) {
     next(err);
   }
@@ -46,7 +47,7 @@ export const getProfileBySlug = async (req, res, next) => {
 export const getMyProfile = async (req, res, next) => {
   try {
     const profile = await getMyProfileService(req.user.id);
-    res.json(profile);
+    res.json(successResponse(profile));
   } catch (err) {
     next(err);
   }
@@ -56,7 +57,7 @@ export const getMyProfile = async (req, res, next) => {
 export const createProfile = async (req, res, next) => {
   try {
     const profile = await createProfileService(req.body);
-    res.status(201).json(profile);
+    res.status(201).json(successResponse(profile));
   } catch (err) {
     next(err);
   }
@@ -66,7 +67,7 @@ export const createProfile = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
   try {
     const profile = await updateProfileService(req.profile, req.body);
-    res.json(profile);
+    res.json(successResponse(profile));
   } catch (err) {
     next(err);
   }
@@ -88,7 +89,7 @@ export const deleteProfile = async (req, res, next) => {
 export const getLinksByProfile = async (req, res, next) => {
   try {
     const links = await getLinksByProfileService(req.params.id);
-    res.json(links);
+    res.json(successResponse(links));
   } catch (err) {
     next(err);
   }
@@ -98,7 +99,7 @@ export const getLinksByProfile = async (req, res, next) => {
 export const createLink = async (req, res, next) => {
   try {
     const link = await createLinkService(req.params.id, req.body);
-    res.status(201).json(link);
+    res.status(201).json(successResponse(link));
   } catch (err) {
     next(err);
   }
@@ -108,7 +109,7 @@ export const createLink = async (req, res, next) => {
 export const updateLink = async (req, res, next) => {
   try {
     const link = await updateLinkService(req.link, req.body);
-    res.json(link);
+    res.json(successResponse(link));
   } catch (err) {
     next(err);
   }

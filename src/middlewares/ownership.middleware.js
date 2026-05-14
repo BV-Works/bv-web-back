@@ -69,10 +69,17 @@ export const checkLinkOwnership = async (req, res, next) => {
     }
 
     // ADMIN bypass
+    // valoramos que el admin puede acceder a cualquier link de cualquier perfil, sin necesidad de validar contra el perfil real
     if (req.user.role === 'ADMIN') {
       req.profile = profile;
       req.link = link;
       return next();
+    }
+    // validamos contra el usuario autenticado
+    if (profile.user_id !== userId) {
+      return res
+        .status(403)
+        .json(errorResponse('Not owner of profile', 'FORBIDDEN_OWNERSHIP'));
     }
 
     // validamos contra el perfil real cargado
