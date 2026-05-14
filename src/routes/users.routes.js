@@ -20,7 +20,7 @@ import {
   updateUserValidator,
 } from '../validators/users.validator.js';
 
-import { ROLES } from '../constants/roles.js';
+import { ROLES } from '../constants/roles.constants.js';
 
 const router = Router();
 

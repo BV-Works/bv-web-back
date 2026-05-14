@@ -5,7 +5,7 @@ import {
   ROLES,
   AUTO_PROFILE_ROLES,
   PROFILE_TYPE_BY_ROLE,
-} from '../constants/roles.js';
+} from '../constants/roles.constants.js';
 import { generateUniqueSlug } from '../utils/slug.js';
 
 // GET USERS - ADMIN ONLY
