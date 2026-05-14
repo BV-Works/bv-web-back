@@ -33,9 +33,7 @@ export const login = async (req, res) => {
       ),
     );
   } catch (err) {
-    return res
-      .status(err.statusCode || 500)
-      .json(errorResponse(err.message, err.code));
+    next(err);
   }
 };
 
@@ -47,7 +45,7 @@ export const logout = async (_req, res) => {
 
     return res.json(successResponse(null, 'Logged out'));
   } catch (err) {
-    return res.status(500).json(errorResponse('Logout failed', 'LOGOUT_ERROR'));
+    next(err);
   }
 };
 
@@ -122,8 +120,6 @@ export const changePassword = async (req, res) => {
 
     return res.json(successResponse(null, 'Password updated'));
   } catch (err) {
-    return res
-      .status(500)
-      .json(errorResponse(err.message, 'CHANGE_PASSWORD_ERROR'));
+    next(err);
   }
 };

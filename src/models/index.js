@@ -11,6 +11,7 @@ import Link from './Link.js';
 User.hasOne(Profile, {
   foreignKey: 'user_id',
   as: 'profile',
+  onDelete: 'CASCADE',
 });
 
 Profile.belongsTo(User, {
@@ -27,6 +28,7 @@ Profile.belongsTo(User, {
 Profile.hasMany(Link, {
   foreignKey: 'profile_id',
   as: 'links',
+  onDelete: 'CASCADE',
 });
 
 Link.belongsTo(Profile, {
