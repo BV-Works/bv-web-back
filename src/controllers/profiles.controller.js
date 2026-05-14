@@ -17,7 +17,7 @@ import { successResponse } from '../utils/apiResponse.js';
 export const getProfiles = async (req, res, next) => {
   try {
     const data = await getProfilesService(req.query);
-    res.json(successResponse(data))
+    res.json(successResponse(data));
   } catch (err) {
     next(err);
   }
