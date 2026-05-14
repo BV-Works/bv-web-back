@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    container_name: bv-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: bv_db
+      POSTGRES_USER: bv_user
+      POSTGRES_PASSWORD: bv_password
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

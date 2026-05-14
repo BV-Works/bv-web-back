@@ -1,6 +1,5 @@
 import Profile from '../models/Profile.js';
 import Link from '../models/Link.js';
-import { paginatedResponse } from '../utils/apiResponse.js';
 // GET PROFILES (LIST + FILTERS) - PUBLIC
 
 export const getProfilesService = async (filters) => {
@@ -25,14 +24,17 @@ export const getProfilesService = async (filters) => {
     order: [['created_at', 'DESC']],
   });
 
-  return paginatedResponse(rows, {
-    pagination: {
-      total: count,
-      page,
-      limit,
-      pages: Math.ceil(count / limit),
+  return {
+    rows,
+    meta: {
+      pagination: {
+        total: count,
+        page,
+        limit,
+        pages: Math.ceil(count / limit),
+      },
     },
-  });
+  };
 };
 
 // GET PROFILE BY ID - ADMIN ONLY

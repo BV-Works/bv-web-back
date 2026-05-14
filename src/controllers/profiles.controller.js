@@ -11,13 +11,13 @@ import {
   updateLinkService,
   deleteLinkService,
 } from '../services/profiles.service.js';
-import { successResponse } from '../utils/apiResponse.js';
+import { successResponse, paginatedResponse } from '../utils/apiResponse.js';
 
 // GET /profiles (PUBLIC)
 export const getProfiles = async (req, res, next) => {
   try {
     const data = await getProfilesService(req.query);
-    res.json(successResponse(data));
+    res.json(paginatedResponse(data));
   } catch (err) {
     next(err);
   }
