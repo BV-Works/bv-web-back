@@ -1,5 +1,7 @@
 import { env } from './config/env.js';
 import app from './app.js';
+import './models/index.js';
+import { runSeed } from './seed.js';
 // Definimos puerto
 const PORT = env.port || 3000;
 // importar config de bbdd
@@ -15,7 +17,7 @@ const startServer = async () => {
       await sequelize.sync({ force: false });
     }
     console.log('Models synced');
-
+    await runSeed();
     app.listen(PORT, () => {
       console.log(`API listening at http://localhost:${PORT}`);
     });

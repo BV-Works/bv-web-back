@@ -50,4 +50,9 @@ export const env = {
     port: process.env.DB_PORT,
     ssl: process.env.DB_SSL === 'true',
   },
+  seed: {
+    runSeed: process.env.RUN_SEED,
+    adminEmail: process.env.SEED_ADMIN_EMAIL,
+    adminPassword: process.env.SEED_ADMIN_PASSWORD,
+  },
 };

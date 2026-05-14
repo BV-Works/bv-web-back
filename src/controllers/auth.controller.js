@@ -82,6 +82,11 @@ export const forgotPassword = async (req, res) => {
   console.log('RESET LINK:', `https://app/reset/${resetToken}`);
 
   return res.json(successResponse(null, 'If user exists, reset email sent'));
+  //   return res.json({
+  //   status: 'success',
+  //   message: 'If the email exists, reset link was generated',
+  //   debug: process.env.NODE_ENV !== 'production' ? resetToken : undefined,
+  // });
 };
 
 // RESET PASSWORD (NO enviar emails todavía primero vamos a hacer el flujo basico de BE y cuando tengamos alguna pantalla en FE probamos con RESEND)
