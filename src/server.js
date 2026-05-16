@@ -12,10 +12,11 @@ const startServer = async () => {
     await sequelize.authenticate(); // encender base de datos
 
     console.log('Database connected');
-
-    if (env.nodeEnv !== 'production') {
-      await sequelize.sync({ force: false });
-    }
+    await sequelize.sync({ alter: true }); // eliminar esto despues de desarrollo, solo para sincronizar modelos con la base de datos
+    // descomentar esto en fase definitiva para evitar perder datos, y comentar el sync de arriba
+    // if (env.nodeEnv !== 'production') {
+    //   await sequelize.sync({ force: false });
+    // }
     console.log('Models synced');
     await runSeed();
     app.listen(PORT, () => {
