@@ -71,7 +71,19 @@ export const createProfileValidator = [
     .isIn(['TEAM', 'ARTIST'])
     .withMessage('profile_type must be TEAM or ARTIST'),
 
-  body('bio').optional().isString().withMessage('bio must be string'),
+  body('bio_web')
+    .optional()
+    .isString()
+    .withMessage('bio must be string')
+    .isLength({ max: 120 })
+    .withMessage('display_name must be 0-120 chars'),
+
+  body('bio_slug')
+    .optional()
+    .isString()
+    .withMessage('bio_slug must be string')
+    .isLength({ max: 120 })
+    .withMessage('display_name must be 0-120 chars'),
 
   body('avatar_url')
     .optional()
@@ -102,7 +114,9 @@ export const updateProfileValidator = [
 
   body('slug').optional().isSlug(),
 
-  body('bio').optional().isString(),
+  body('bio_web').optional().isString(),
+
+  body('bio_slug').optional().isString(),
 
   body('avatar_url').optional().isURL(),
 

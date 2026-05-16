@@ -77,7 +77,7 @@ router.get(
 );
 
 // POST /profiles (ADMIN solo para crear perfiles de otros usuarios)
-// (el usuario común solo puede crear su propio perfil al registrarse, lo cual se manejará en el auth.controller.js (DE MOMENTO SOLO ADMIN))
+// (el usuario común NO puede crear su propio perfil al registrarse, de hecho no puede ni registrarse de momento, el registro lo manejará el auth.controller.js (DE MOMENTO SOLO ADMIN))
 router.post(
   '/',
   authenticateJWT,

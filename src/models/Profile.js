@@ -35,7 +35,12 @@ const Profile = sequelize.define(
       unique: true,
     },
 
-    bio: {
+    bio_web: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
+    bio_slug: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
