@@ -35,12 +35,14 @@ export const getUsersService = async ({
   });
 
   return {
-    users: rows,
-    pagination: {
-      total: count,
-      page,
-      limit,
-      totalPages: Math.ceil(count / limit),
+    rows,
+    meta: {
+      pagination: {
+        total: count,
+        page,
+        limit,
+        pages: Math.ceil(count / limit),
+      },
     },
   };
 };

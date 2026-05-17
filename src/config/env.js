@@ -30,6 +30,7 @@ export const env = {
     'https://bajovigilancia.com',
     'https://www.bajovigilancia.com',
     'http://localhost:3000',
+    'http://localhost:3001',
   ],
 
   jwtSecret: process.env.ACCESS_TOKEN_SECRET,
