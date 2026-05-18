@@ -42,6 +42,26 @@ export const checkProfileOwnership = async (req, res, next) => {
   }
 };
 
+// USER OWNERSHIP (para rutas que incluyen :userId, ej: GET /profiles/user/:userId)
+export const checkUserProfileOwnership = async (req, res, next) => {
+  try {
+    const targetUserId = req.params.id;
+    const authUser = req.user;
+
+    // admin siempre pasa
+    if (authUser.role === 'ADMIN') return next();
+
+    // solo puede acceder a su propio perfil
+    if (authUser.id !== targetUserId) {
+      return res.status(403).json(errorResponse('Forbidden', 'FORBIDDEN'));
+    }
+
+    next();
+  } catch (err) {
+    return res.status(500).json(errorResponse('Auth error', 'AUTH_ERROR'));
+  }
+};
+
 // LINK OWNERSHIP (para rutas que incluyen ambos :id y :linkId, ej: GET /profiles/:id/links/:linkId)
 
 export const checkLinkOwnership = async (req, res, next) => {
