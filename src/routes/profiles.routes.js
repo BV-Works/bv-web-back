@@ -22,7 +22,7 @@ import { authorizeRoles } from '../middlewares/role.middleware.js';
 import {
   checkProfileOwnership,
   checkLinkOwnership,
-  checkUserProfileOwnership
+  checkUserProfileOwnership,
 } from '../middlewares/ownership.middleware.js';
 
 import { validateRequest } from '../middlewares/validation.middleware.js';

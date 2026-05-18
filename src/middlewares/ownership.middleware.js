@@ -53,16 +53,12 @@ export const checkUserProfileOwnership = async (req, res, next) => {
 
     // solo puede acceder a su propio perfil
     if (authUser.id !== targetUserId) {
-      return res.status(403).json(
-        errorResponse('Forbidden', 'FORBIDDEN')
-      );
+      return res.status(403).json(errorResponse('Forbidden', 'FORBIDDEN'));
     }
 
     next();
   } catch (err) {
-    return res.status(500).json(
-      errorResponse('Auth error', 'AUTH_ERROR')
-    );
+    return res.status(500).json(errorResponse('Auth error', 'AUTH_ERROR'));
   }
 };
 
