@@ -3,6 +3,7 @@ import { Router } from 'express';
 import {
   getProfiles,
   getProfileById,
+  getProfileByUserId,
   getProfileBySlug,
   getMyProfile,
   createProfile,
@@ -36,6 +37,8 @@ import {
   updateLinkValidator,
 } from '../validators/profiles.validator.js';
 
+import { userIdValidator } from '../validators/users.validator.js';
+
 import { ROLES } from '../constants/roles.constants.js';
 
 const router = Router();
@@ -66,7 +69,7 @@ router.get('/me', authenticateJWT, getMyProfile);
 
 // RUTAS ADMIN O PRIVADAS (requieren rol ADMIN o ownership del perfil)
 
-// GET admin / edición por ID (ADMIN ONLY)
+// GET admin / edición por profileID (ADMIN ONLY)
 router.get(
   '/:id',
   authenticateJWT,
@@ -74,6 +77,16 @@ router.get(
   profileIdValidator,
   validateRequest,
   getProfileById,
+);
+
+// GET admin / edición por userId (ADMIN ONLY)
+router.get(
+  '/user/:id',
+  authenticateJWT,
+  authorizeRoles(ROLES.ADMIN),
+  userIdValidator,
+  validateRequest,
+  getProfileByUserId,
 );
 
 // POST /profiles (ADMIN solo para crear perfiles de otros usuarios)

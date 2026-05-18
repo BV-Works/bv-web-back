@@ -5,16 +5,14 @@ import {
   updateUserService,
   deleteUserService,
 } from '../services/users.service.js';
-import { successResponse , paginatedResponse } from '../utils/apiResponse.js';
+import { successResponse, paginatedResponse } from '../utils/apiResponse.js';
 
 // GET /users (ADMIN)
 export const getUsers = async (req, res, next) => {
   try {
     const result = await getUsersService(req.query);
 
-    res.json(
-      paginatedResponse(result.rows, result.meta)
-    );
+    res.json(paginatedResponse(result.rows, result.meta));
   } catch (err) {
     next(err);
   }
