@@ -1,6 +1,7 @@
 import {
   getProfilesService,
   getProfileByIdService,
+  getProfileByUserIdService,
   getProfileBySlugService,
   getMyProfileService,
   createProfileService,
@@ -30,6 +31,17 @@ export const getProfiles = async (req, res, next) => {
 export const getProfileById = async (req, res, next) => {
   try {
     const profile = await getProfileByIdService(req.params.id);
+    res.json(successResponse(profile));
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+// GET /profiles/user/:userId (ADMIN)
+export const getProfileByUserId = async (req, res, next) => {
+  try {
+    const profile = await getProfileByUserIdService(req.params.id);
     res.json(successResponse(profile));
   } catch (err) {
     next(err);

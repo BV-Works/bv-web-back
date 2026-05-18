@@ -1,5 +1,7 @@
 import Profile from '../models/Profile.js';
 import Link from '../models/Link.js';
+import { generateUniqueSlug } from '../utils/slug.js';
+
 // GET PROFILES (LIST + FILTERS) - PUBLIC
 
 export const getProfilesService = async (filters) => {
@@ -41,6 +43,30 @@ export const getProfilesService = async (filters) => {
 
 export const getProfileByIdService = async (id) => {
   const profile = await Profile.findByPk(id);
+
+  if (!profile) {
+    throw {
+      statusCode: 404,
+      message: 'Profile not found',
+      code: 'PROFILE_NOT_FOUND',
+    };
+  }
+
+  return profile;
+};
+
+// GET PROFILE BY userId - ADMIN ONLY
+
+export const getProfileByUserIdService = async (userId) => {
+  const profile = await Profile.findOne({
+    where: { user_id: userId },
+    include: [
+      {
+        model: Link,
+        as: 'links',
+      },
+    ],
+  });
 
   if (!profile) {
     throw {
@@ -98,18 +124,13 @@ export const getMyProfileService = async (userId) => {
 // CREATE PROFILE - ADMIN ONLY
 
 export const createProfileService = async (data) => {
-  const existing = await Profile.findOne({
-    where: { slug: data.slug },
+  const slug = await generateUniqueSlug(data.display_name);
+
+  const profile = await Profile.create({
+    ...data,
+    slug,
   });
 
-  if (existing) {
-    throw {
-      statusCode: 409,
-      message: 'Slug already in use',
-      code: 'SLUG_CONFLICT',
-    };
-  }
-  const profile = await Profile.create(data);
   return profile;
 };
 
