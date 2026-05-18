@@ -22,6 +22,7 @@ import { authorizeRoles } from '../middlewares/role.middleware.js';
 import {
   checkProfileOwnership,
   checkLinkOwnership,
+  checkUserProfileOwnership
 } from '../middlewares/ownership.middleware.js';
 
 import { validateRequest } from '../middlewares/validation.middleware.js';
@@ -79,12 +80,13 @@ router.get(
   getProfileById,
 );
 
-// GET admin / edición por userId (ADMIN ONLY)
+// GET user or admin / edición por userId (ADMIN o propietario)
 router.get(
   '/user/:id',
   authenticateJWT,
-  authorizeRoles(ROLES.ADMIN),
   userIdValidator,
+  validateRequest, // Validar ID antes de verificar ownership
+  checkUserProfileOwnership,
   validateRequest,
   getProfileByUserId,
 );
