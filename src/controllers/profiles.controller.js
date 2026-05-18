@@ -19,9 +19,7 @@ export const getProfiles = async (req, res, next) => {
   try {
     const result = await getProfilesService(req.query);
 
-    res.json(
-      paginatedResponse(result.rows, result.meta)
-    );
+    res.json(paginatedResponse(result.rows, result.meta));
   } catch (err) {
     next(err);
   }
@@ -36,7 +34,6 @@ export const getProfileById = async (req, res, next) => {
     next(err);
   }
 };
-
 
 // GET /profiles/user/:userId (ADMIN)
 export const getProfileByUserId = async (req, res, next) => {
