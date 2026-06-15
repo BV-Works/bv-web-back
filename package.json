@@ -7,6 +7,8 @@
     "start": "node ./src/server.js",
     "dev-bbdd": "dotenv -e .env.local -- node --watch ./src/server.js",
     "dev-docker": "dotenv -e .env.docker -- node --watch ./src/server.js",
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down -v",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write ."
   },
