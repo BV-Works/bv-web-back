@@ -11,6 +11,7 @@ import {
   createLinkService,
   updateLinkService,
   deleteLinkService,
+  uploadProfileImageService,
 } from '../services/profiles.service.js';
 import { successResponse, paginatedResponse } from '../utils/apiResponse.js';
 
@@ -90,6 +91,21 @@ export const deleteProfile = async (req, res, next) => {
   try {
     await deleteProfileService(req.profile);
     res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /profiles/:id/image
+export const uploadProfileImage = async (req, res, next) => {
+  try {
+    const profile = req.profile; // ownership middleware
+    const file = req.file;
+    const { type } = req.body;
+
+    const result = await uploadProfileImageService(profile, file, type);
+
+    res.json(successResponse(result));
   } catch (err) {
     next(err);
   }

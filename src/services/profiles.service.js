@@ -1,6 +1,9 @@
 import Profile from '../models/Profile.js';
 import Link from '../models/Link.js';
 import { generateUniqueSlug } from '../utils/slug.js';
+import cloudinary from '../config/cloudinary.js';
+import streamifier from 'streamifier';
+import { extractPublicIdFromUrl } from '../utils/cloudinary.js';
 
 // GET PROFILES (LIST + FILTERS) - PUBLIC
 
@@ -159,6 +162,90 @@ export const updateProfileService = async (profile, data) => {
 export const deleteProfileService = async (profile) => {
   await profile.destroy();
   return true;
+};
+
+// UPLOAD PROFILE IMAGE - ADMIN O OWNER CONTROLADO POR MIDDLEWARE
+
+export const uploadProfileImageService = async (profile, file, type) => {
+  if (!file) {
+    throw {
+      statusCode: 400,
+      message: 'File is required',
+      code: 'FILE_REQUIRED',
+    };
+  }
+
+  if (!['avatar', 'secondary'].includes(type)) {
+    throw {
+      statusCode: 400,
+      message: 'Invalid image type',
+      code: 'INVALID_IMAGE_TYPE',
+    };
+  }
+
+  // GUARDAMOS URL ANTIGUA
+  const existingUrl =
+    type === 'avatar' ? profile.avatar_url : profile.secondary_image_url;
+
+  // -------------------------
+  // CLOUDINARY UPLOAD STREAM
+  // -------------------------
+
+  const uploadFromBuffer = () =>
+    new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: `profiles/${profile.id}`,
+          resource_type: 'image',
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+
+      streamifier.createReadStream(file.buffer).pipe(stream);
+    });
+
+  const result = await uploadFromBuffer();
+
+  // -------------------------
+  // UPDATE DB WITH NEW IMAGE
+  // -------------------------
+
+  const updateData =
+    type === 'avatar'
+      ? { avatar_url: result.secure_url }
+      : { secondary_image_url: result.secure_url };
+
+  await profile.update(updateData);
+
+  // -------------------------
+  // DELETE OLD IMAGE AFTER SUCCESS
+  // -------------------------
+
+  if (existingUrl) {
+    const publicId = extractPublicIdFromUrl(existingUrl);
+
+    if (publicId) {
+      try {
+        await cloudinary.uploader.destroy(publicId, {
+          resource_type: 'image',
+          invalidate: true,
+        });
+      } catch (err) {
+        console.warn('Cloudinary old image delete failed:', err.message);
+      }
+    }
+  }
+
+  await profile.reload();
+
+  return {
+    profile,
+    uploadedUrl: result.secure_url,
+    type,
+  };
 };
 
 // LINKS - ADMIN O OWNER CONTROLADO POR MIDDLEWARE
