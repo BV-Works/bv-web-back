@@ -13,6 +13,7 @@ import {
   createLink,
   updateLink,
   deleteLink,
+  uploadProfileImage,
 } from '../controllers/profiles.controller.js';
 
 import { authenticateJWT } from '../middlewares/auth.middleware.js';
@@ -27,6 +28,8 @@ import {
 
 import { validateRequest } from '../middlewares/validation.middleware.js';
 
+import { uploadImage } from '../middlewares/upload.middleware.js';
+
 import {
   profileIdValidator,
   profileSlugValidator,
@@ -36,6 +39,7 @@ import {
   linkIdValidator,
   createLinkValidator,
   updateLinkValidator,
+  validateImageUpload,
 } from '../validators/profiles.validator.js';
 
 import { userIdValidator } from '../validators/users.validator.js';
@@ -122,6 +126,22 @@ router.delete(
   validateRequest,
   checkProfileOwnership,
   deleteProfile,
+);
+
+// IMAGES (subrecurso de profile)
+
+// POST /profiles/:id/image (ADMIN o propietario)
+
+router.post(
+  '/:id/image',
+  authenticateJWT,
+  profileIdValidator,
+  validateRequest,
+  checkProfileOwnership,
+
+  uploadImage.single('image'),
+  validateImageUpload,
+  uploadProfileImage,
 );
 
 // LINKS (subrecurso de profile)

@@ -26,32 +26,36 @@ Todas las respuestas siguen un contrato unificado:
 ### ✔️ Success
 
 {
-  status: "success",
-  data: T,
-  message?: string
+status: "success",
+data: T,
+message?: string
 }
+
 ### ✔️ Paginated Success
+
 {
-  status: "success",
-  data: T[],
-  meta: {
-    total: number,
-    page: number,
-    limit: number,
-    totalPages: number
-  }
+status: "success",
+data: T[],
+meta: {
+total: number,
+page: number,
+limit: number,
+totalPages: number
+}
 }
 
 ### ❌ Error
+
 {
-  status: "error",
-  message: string,
-  code?: string
+status: "error",
+message: string,
+code?: string
 }
 
 ---
 
 ## 🔐 Autenticación y Autorización
+
 JWT Authentication (authenticateJWT)
 Role-based access control (authorizeRoles)
 Ownership validation (checkProfileOwnership, checkLinkOwnership)
@@ -89,7 +93,9 @@ Listado paginado (PaginatedResponse)
 Roles gestionados por ADMIN
 
 ## 🧑‍🎤 Módulo Profiles
+
 ### Endpoints Públicos
+
 GET /profiles
 GET /profiles/public/:slug
 Privados
@@ -98,6 +104,7 @@ GET /profiles/:id (ADMIN)
 GET /profiles/user/:userId (ADMIN o owner)
 
 ### Endpoints CRUD
+
 POST /profiles (ADMIN)
 PUT /profiles/:id (ADMIN o owner)
 DELETE /profiles/:id
@@ -107,6 +114,7 @@ DELETE /profiles/:id
 Los links pertenecen a un profile.
 
 ### Endpoints
+
 GET /profiles/:id/links
 POST /profiles/:id/links
 PUT /profiles/:id/links/:linkId
@@ -116,7 +124,7 @@ El backend ordena automáticamente por position ASC
 Reordenación se realiza actualizando position en cada link
 order: [['position', 'ASC']]
 
-##  🧾 Validación
+## 🧾 Validación
 
 Se usa express-validator para validar:
 
@@ -129,24 +137,25 @@ Body payloads (create/update profile & links)
 Todos los errores siguen el formato:
 
 class ApiError {
-  status: "error";
-  message: string;
-  code?: string;
+status: "error";
+message: string;
+code?: string;
 }
 
 El frontend utiliza este contrato para mapear errores sin lógica duplicada.
 
 ## 🧠 Decisiones de Diseño Importantes
+
 1. Links NO se crean con ID en frontend
-El backend genera todos los IDs
-El frontend solo envía payloads
+   El backend genera todos los IDs
+   El frontend solo envía payloads
 2. Profiles edit mode (V0 pattern)
-Edición local (optimistic UI)
-Guardado final con saveChanges()
+   Edición local (optimistic UI)
+   Guardado final con saveChanges()
 3. Reordenación de links
-Se basa en position
-No existe endpoint específico de bulk reorder (por ahora)
-Se actualiza mediante múltiples PUT /links/:id
+   Se basa en position
+   No existe endpoint específico de bulk reorder (por ahora)
+   Se actualiza mediante múltiples PUT /links/:id
 
 ## 📊 Paginación
 
@@ -162,11 +171,13 @@ limit
 totalPages
 
 ## 🔒 Ownership Rules
+
 Usuarios solo pueden editar sus propios perfiles
 Admin puede acceder a todo
 Links heredan ownership del profile
 
 ## 🚀 Stack
+
 Node.js
 Express
 Sequelize
@@ -175,6 +186,7 @@ express-validator
 MySQL / PostgreSQL (según config)
 
 ## 🧭 Estado del Proyecto
+
 Auth → Completo
 Users → Completo
 Profiles → En evolución
@@ -182,12 +194,14 @@ Links → CRUD básico + ordenación por posición
 Frontend integration → MVP Desplegado en https://bajovigilancia.com (bv-web-front: https://github.com/BV-Works/bv-web-front/tree/development)
 
 ## 🧠 Filosofía del sistema
+
 Contratos estrictos API-first
 Frontend desacoplado del backend
 Error handling centralizado
 Evolución incremental (MVP → scalable system)
 
 ## 📌 Próximos pasos (roadmap backend)
+
 Bulk reorder links (optimización)
 Profile media management (avatar uploads)
 Cloudinary para subir imágenes
@@ -195,7 +209,6 @@ Resend/Node mailer para envío de correos
 Rate limiting auth
 Caching de perfiles públicos
 Webhooks o events internos (futuro)
-
 
 <!-- 2. 🧪 RESET LIMPIO DE BASE DE DATOS (RECOMENDADO)
 
@@ -211,4 +224,7 @@ docker ps
 LOCAL: npm run dev-docker
 o si quieres tirar de supabase: npm run dev-bbdd
 -->
+
+```
+
 ```

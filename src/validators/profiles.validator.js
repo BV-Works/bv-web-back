@@ -128,6 +128,22 @@ export const updateProfileValidator = [
 ];
 
 // --------------------------------------
+// UPLOAD IMAGE
+// POST /profiles/:id/image
+// --------------------------------------
+export const validateImageUpload = (req, res, next) => {
+  if (!req.file) {
+    return next({
+      statusCode: 400,
+      message: 'Image file is required',
+      code: 'IMAGE_REQUIRED',
+    });
+  }
+
+  next();
+};
+
+// --------------------------------------
 // CREATE LINK
 // --------------------------------------
 
