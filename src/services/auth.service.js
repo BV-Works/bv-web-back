@@ -47,7 +47,6 @@ export const verifyToken = (token) => {
   return jwt.verify(token, env.jwtSecret);
 };
 
-
 // GENERATE PASSWORD RESET TOKEN
 
 export const generatePasswordResetToken = (user) => {

@@ -117,12 +117,7 @@ export const resetPassword = async (req, res) => {
     newPassword,
   });
 
-  return res.json(
-    successResponse(
-      null,
-      'Password reset successful',
-    ),
-  );
+  return res.json(successResponse(null, 'Password reset successful'));
 };
 
 // CHANGE PASSWORD (requiere auth middleware)

@@ -3,12 +3,7 @@ import { env } from '../config/env.js';
 
 const resend = new Resend(env.resendApiKey);
 
-export const sendEmail = async ({
-  to,
-  subject,
-  html,
-  text,
-}) => {
+export const sendEmail = async ({ to, subject, html, text }) => {
   await resend.emails.send({
     from: env.mailFrom,
     to,
@@ -18,10 +13,7 @@ export const sendEmail = async ({
   });
 };
 
-export const sendResetPasswordEmail = async ({
-  to,
-  resetUrl,
-}) => {
+export const sendResetPasswordEmail = async ({ to, resetUrl }) => {
   await sendEmail({
     to,
     subject: 'Reset your BajoVigilancia password',
@@ -50,10 +42,7 @@ Reset password
   });
 };
 
-export const sendWelcomeEmail = async ({
-  to,
-  resetUrl,
-}) => {
+export const sendWelcomeEmail = async ({ to, resetUrl }) => {
   await sendEmail({
     to,
     subject: 'Welcome to BajoVigilancia',
