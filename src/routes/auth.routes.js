@@ -29,8 +29,7 @@ router.post('/login', loginValidator, validateRequest, login);
 router.post('/logout', logout);
 
 // POST /auth/forgot-password: NO devolver nunca: si el email existe o no, para evitar ataques de enumeración de usuarios.
-//-> recibe un email, si existe el usuario, genera un token de recuperación y lo envía por email (simulado)
-// (hay que completar Resend para enviar correos por email, por ahora se simula mostrando el link de reset en consola)
+//-> recibe un email, si existe el usuario, genera un token de recuperación y lo envía por email
 router.post(
   '/forgot-password',
   forgotPasswordValidator,
@@ -45,6 +44,11 @@ router.post(
   validateRequest,
   resetPassword,
 ); //-> recibe un token y una nueva contraseña, verifica el token, si es válido, actualiza la contraseña del usuario y elimina el token
+// TODO:
+// Password reset JWTs are currently reusable until expiration.
+// Future improvement:
+// invalidate after first successful use
+// (password_changed_at or password_reset_version).
 
 // PROTECTED AUTH (requieren token válido, pero no rol específico)
 
