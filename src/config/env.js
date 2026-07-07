@@ -10,6 +10,9 @@ const requiredEnv = [
   'DB_DATABASE',
   'DB_PASSWORD',
   'ACCESS_TOKEN_SECRET',
+  'PASSWORD_RESET_SECRET',
+  'RESEND_API_KEY',
+  'MAIL_FROM',
 ];
 
 requiredEnv.forEach((key) => {
@@ -34,6 +37,13 @@ export const env = {
   ],
 
   jwtSecret: process.env.ACCESS_TOKEN_SECRET,
+  passwordResetSecret: process.env.PASSWORD_RESET_SECRET,
+
+  passwordResetExpires: process.env.PASSWORD_RESET_EXPIRES || '7d',
+
+  resendApiKey: process.env.RESEND_API_KEY,
+
+  mailFrom: process.env.MAIL_FROM,
 
   cloudinary: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',

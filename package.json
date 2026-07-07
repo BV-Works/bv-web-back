@@ -39,6 +39,7 @@
     "multer": "^2.2.0",
     "pg": "^8.20.0",
     "pg-hstore": "^2.3.4",
+    "resend": "^6.17.1",
     "sequelize": "^6.37.8",
     "streamifier": "^0.1.1",
     "swagger-ui-express": "^5.0.1",

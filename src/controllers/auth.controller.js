@@ -1,10 +1,16 @@
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { env } from '../config/env.js';
 
 import { successResponse, errorResponse } from '../utils/apiResponse.js';
-import { loginUser } from '../services/auth.service.js';
+import {
+  loginUser,
+  generatePasswordResetToken,
+  verifyPasswordResetToken,
+  resetUserPassword,
+} from '../services/auth.service.js';
+
+import { sendResetPasswordEmail } from '../services/mail.service.js';
 import { AUTH_COOKIE_NAME } from '../constants/auth.constants.js';
 
 // LOGIN
@@ -71,27 +77,46 @@ export const checkMe = async (req, res) => {
   }
 };
 
-// FORGOT PASSWORD (NO enviar emails todavía primero vamos a hacer el flujo basico de BE y cuando tengamos alguna pantalla en FE probamos con RESEND)
+// FORGOT PASSWORD
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
-  // generar token fake o real // TODO: replace with secure token + DB persistence + expiry
-  const resetToken = 'dummy-token';
+  const user = await User.findOne({
+    where: { email },
+  });
 
-  console.log('RESET LINK:', `https://app/reset/${resetToken}`);
+  if (user) {
+    const token = generatePasswordResetToken(user);
 
-  return res.json(successResponse(null, 'If user exists, reset email sent'));
-  //   return res.json({
-  //   status: 'success',
-  //   message: 'If the email exists, reset link was generated',
-  //   debug: process.env.NODE_ENV !== 'production' ? resetToken : undefined,
-  // });
+    const resetUrl = `${env.frontendUrl}/reset-password?token=${token}`;
+
+    await sendResetPasswordEmail({
+      to: user.email,
+      resetUrl,
+    });
+  }
+
+  return res.json(
+    successResponse(
+      null,
+      'If the account exists, a reset email has been sent.',
+    ),
+  );
 };
 
-// RESET PASSWORD (NO enviar emails todavía primero vamos a hacer el flujo basico de BE y cuando tengamos alguna pantalla en FE probamos con RESEND)
+// RESET PASSWORD
 
-export const resetPassword = async (_req, res) => {
+export const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  const payload = verifyPasswordResetToken(token);
+
+  await resetUserPassword({
+    userId: payload.id,
+    newPassword: newPassword,
+  });
+
   return res.json(successResponse(null, 'Password reset successful'));
 };
 
@@ -109,6 +134,17 @@ export const changePassword = async (req, res) => {
       return res
         .status(404)
         .json(errorResponse('User not found', 'USER_NOT_FOUND'));
+    }
+
+    if (currentPassword === newPassword) {
+      return res
+        .status(400)
+        .json(
+          errorResponse(
+            'New password must be different from the current password',
+            'PASSWORD_UNCHANGED',
+          ),
+        );
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password_hash);

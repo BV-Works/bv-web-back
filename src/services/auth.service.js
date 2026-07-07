@@ -46,3 +46,46 @@ export const loginUser = async ({ email, password }) => {
 export const verifyToken = (token) => {
   return jwt.verify(token, env.jwtSecret);
 };
+
+// GENERATE PASSWORD RESET TOKEN
+
+export const generatePasswordResetToken = (user) => {
+  return jwt.sign(
+    {
+      id: user.id,
+      type: 'password-reset',
+    },
+    env.passwordResetSecret,
+    {
+      expiresIn: env.passwordResetExpires,
+    },
+  );
+};
+
+// VERIFY PASSWORD RESET TOKEN
+
+export const verifyPasswordResetToken = (token) => {
+  return jwt.verify(token, env.passwordResetSecret);
+};
+
+// RESET USER PASSWORD
+
+export const resetUserPassword = async ({ userId, newPassword }) => {
+  const user = await User.findByPk(userId);
+
+  if (!user) {
+    throw {
+      statusCode: 404,
+      message: 'User not found',
+      code: 'USER_NOT_FOUND',
+    };
+  }
+
+  const password_hash = await bcrypt.hash(newPassword, 10);
+
+  await user.update({
+    password_hash,
+  });
+
+  return user;
+};
