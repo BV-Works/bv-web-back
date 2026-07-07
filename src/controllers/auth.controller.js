@@ -77,7 +77,7 @@ export const checkMe = async (req, res) => {
   }
 };
 
-// FORGOT PASSWORD (NO enviar emails todavía primero vamos a hacer el flujo basico de BE y cuando tengamos alguna pantalla en FE probamos con RESEND)
+// FORGOT PASSWORD
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -105,7 +105,7 @@ export const forgotPassword = async (req, res) => {
   );
 };
 
-// RESET PASSWORD (NO enviar emails todavía primero vamos a hacer el flujo basico de BE y cuando tengamos alguna pantalla en FE probamos con RESEND)
+// RESET PASSWORD
 
 export const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
