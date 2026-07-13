@@ -31,7 +31,10 @@ export const getUserById = async (req, res, next) => {
 // POST /users (ADMIN)
 export const createUser = async (req, res, next) => {
   try {
-    const user = await createUserService(req.body);
+    const user = await createUserService({
+      ...req.body,
+      sendInvitation: true,
+    });
     res.status(201).json(successResponse(user));
   } catch (err) {
     next(err);

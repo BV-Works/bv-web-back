@@ -8,7 +8,9 @@ import {
 } from '../constants/roles.constants.js';
 import { generateUniqueSlug } from '../utils/slug.js';
 import sequelize from '../config/db_pg.js';
-
+import { generatePasswordResetToken } from './auth.service.js';
+import { sendWelcomeEmail } from './mail.service.js';
+import { env } from '../config/env.js';
 // GET USERS - ADMIN ONLY
 
 export const getUsersService = async ({
@@ -71,6 +73,7 @@ export const createUserService = async ({
   password,
   role = ROLES.CUSTOMER,
   is_active = true,
+  sendInvitation = false,
 }) => {
   const existing = await User.findOne({ where: { email } });
 
@@ -114,6 +117,22 @@ export const createUserService = async ({
     }
 
     await transaction.commit();
+
+    // Send invitation email if requested
+    if (sendInvitation) {
+      try {
+        const token = generatePasswordResetToken(user);
+
+        const resetUrl = `${env.frontendUrl}/reset-password?token=${token}`;
+
+        await sendWelcomeEmail({
+          to: user.email,
+          resetUrl,
+        });
+      } catch (emailError) {
+        console.error('Error sending welcome email:', emailError);
+      }
+    }
 
     const safeUser = user.toJSON();
     delete safeUser.password_hash;
