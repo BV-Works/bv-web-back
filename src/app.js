@@ -14,16 +14,10 @@ import cookieParser from 'cookie-parser';
 
 // importar CORS para seguridad: permite controlar qué recursos web pueden ser solicitados por un origen diferente.
 import cors from 'cors';
-// importar limiter para limitar las peticiones al servidor
-import rateLimit from 'express-rate-limit';
+// importar rate limiter para limitar la cantidad de solicitudes que un cliente puede hacer a un servidor en un período de tiempo determinado.
+import { apiLimiter } from './middlewares/rateLimit.middleware.js';
 // importar manejo de errores personalizado
 import { errorHandler, notFound } from './middlewares/error.middleware.js';
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Límite de 100 solicitudes por IP dentro del tiempo de ventana
-  message: 'Demasiadas solicitudes. Por favor intente nuevamente más tarde.',
-});
 
 //Swagger
 import swaggerUI from 'swagger-ui-express';
@@ -47,12 +41,16 @@ app.use(
   }),
 );
 
-// de momento comentado para que no moleste durante desarrollos:
-// app.use(limiter);
+app.use(
+  helmet({
+    crossOriginResourcePolicy: {
+      policy: 'cross-origin', // Permite que los recursos se compartan entre diferentes orígenes (cross-origin) para evitar problemas de carga de recursos.
+    },
+  }),
+); // Helmet para proteger contra ataques de tipo xss
 
-app.use(helmet()); // Helmet para proteger contra ataques de tipo xss
 app.use(cookieParser()); // Parsear las cookies que vienen en las cabezeras http: "It simplifies managing user sessions, authentication tokens, and preferences by converting raw request cookie headers into easily accessible JSON objects."
-
+app.use(apiLimiter); // Limitar la cantidad de solicitudes que un cliente puede hacer a un servidor en un período de tiempo determinado para proteger contra ataques de denegación de servicio (DoS) y abuso de recursos.
 // --------------------------------------
 // RUTAS:
 
