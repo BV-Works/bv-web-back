@@ -1,7 +1,12 @@
-import sequelize from '../config/db_pg.js';
-import { successResponse, errorResponse } from '../utils/apiResponse.js';
+export const checkHealth = async (req, res) => {
+  console.log('[HEALTH]', {
+    time: new Date().toISOString(),
+    ip: req.ip,
+    userAgent: req.get('user-agent'),
+    forwardedFor: req.get('x-forwarded-for'),
+    cfConnectingIp: req.get('cf-connecting-ip'),
+  });
 
-export const checkHealth = async (_req, res) => {
   try {
     await sequelize.authenticate();
 
