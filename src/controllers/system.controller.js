@@ -1,3 +1,4 @@
+import sequelize from '../config/db_pg.js';
 import { successResponse, errorResponse } from '../utils/apiResponse.js';
 
 export const checkHealth = async (req, res) => {
