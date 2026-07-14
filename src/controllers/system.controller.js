@@ -1,4 +1,4 @@
-import { succeessResponse, errorResponse } from '../utils/apiResponse.js';
+import { successResponse, errorResponse } from '../utils/apiResponse.js';
 
 export const checkHealth = async (req, res) => {
   console.log('[HEALTH]', {
