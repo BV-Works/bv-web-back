@@ -9,6 +9,12 @@ import {
   changePassword,
 } from '../controllers/auth.controller.js';
 
+import {
+  loginLimiter,
+  forgotPasswordLimiter,
+  resetPasswordLimiter,
+} from '../middlewares/rateLimit.middleware.js';
+
 import { authenticateJWT } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
 import {
@@ -23,7 +29,7 @@ const router = Router();
 // PUBLIC AUTH
 
 // POST /auth/login
-router.post('/login', loginValidator, validateRequest, login);
+router.post('/login', loginLimiter, loginValidator, validateRequest, login);
 
 // POST /auth/logout
 router.post('/logout', logout);
@@ -32,6 +38,7 @@ router.post('/logout', logout);
 //-> recibe un email, si existe el usuario, genera un token de recuperación y lo envía por email
 router.post(
   '/forgot-password',
+  forgotPasswordLimiter,
   forgotPasswordValidator,
   validateRequest,
   forgotPassword,
@@ -40,15 +47,18 @@ router.post(
 // POST /auth/reset-password
 router.post(
   '/reset-password',
+  resetPasswordLimiter,
   resetPasswordValidator,
   validateRequest,
   resetPassword,
 ); //-> recibe un token y una nueva contraseña, verifica el token, si es válido, actualiza la contraseña del usuario y elimina el token
 // TODO:
-// Password reset JWTs are currently reusable until expiration.
+// Password reset tokens are reusable until expiration.
 // Future improvement:
-// invalidate after first successful use
-// (password_changed_at or password_reset_version).
+// - add password_changed_at timestamp
+//   OR
+// - add password_reset_version
+// so every reset token becomes single-use.
 
 // PROTECTED AUTH (requieren token válido, pero no rol específico)
 
