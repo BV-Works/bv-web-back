@@ -14,7 +14,7 @@ import cookieParser from 'cookie-parser';
 
 // importar CORS para seguridad: permite controlar qué recursos web pueden ser solicitados por un origen diferente.
 import cors from 'cors';
-// importar rate limiter para limitar la cantidad de solicitudes que un cliente puede hacer a un servidor en un período de tiempo determinado.
+// importar rate limiter
 import { apiLimiter } from './middlewares/rateLimit.middleware.js';
 // importar manejo de errores personalizado
 import { errorHandler, notFound } from './middlewares/error.middleware.js';
